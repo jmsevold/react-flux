@@ -4,7 +4,7 @@ import AppStore from '../stores/appStore';
 import AppActions from '../actions/appActions'
 
 const getStateFromStore = () =>{
-  AppStore.getNames();
+  return AppStore.getNames();
 }
 
 class Form extends React.Component {

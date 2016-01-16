@@ -10,6 +10,8 @@ var names = [{firstName: "jonathan", lastName: "sevold"}];
 
 
 const AppStore = Object.assign(EventEmitter.prototype, {
+
+
   emitChange(){
     this.emit( 'change' )
   },
@@ -32,6 +34,7 @@ Dispatcher.register( function(action){
     switch(action.actionType){
       case AppConstants.ADD_NAME:
         let name = action.name;
+        console.log(names,'<---- names');
         names.push(name);
         break;
 
