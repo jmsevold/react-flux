@@ -11,7 +11,7 @@ class Form extends React.Component {
   constructor(){
     super();
     this.state = {
-      names: [{firstName: "jonathan", lastName: "sevold"}]
+      names: []
     }
     console.log('hello',getStateFromStore())
     this.onChange = this.onChange.bind(this);
