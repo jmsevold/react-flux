@@ -1,112 +1,55 @@
-import { dispatch, register} from '../dispatchers/app-dispatcher';
-import AppConstants from '../constants/app-constants';
+import Dispatcher from '../dispatchers/dispatcher';
+import AppConstants from '../constants/appConstants';
 import { EventEmitter } from 'events';
-
-const CHANGE_EVENT = 'change';
-
-var _catalog = [];
-
-for (let i = 1; i < 9; i++) {
-  _catalog.push({
-    'id': 'Widget' + i,
-    'title': 'Widget #' + i,
-    'summary': 'A great widget',
-    'description': 'Here\'s a description',
-    'cost': i
-  } );
-}
+import { findIndex } from 'lodash';
 
 
-var _cartItems = [];
 
-const _removeItem = ( item ) => {
-    _cartItems.splice( _cartItems.findIndex( i => i === item ), 1 );
-};
 
-const _findCartItem = ( item ) => {
-    return _cartItems.find( cartItem => cartItem.id === item.id )
-};
-
-const _increaseItem = ( item ) => item.qty++;
-
-const _decreaseItem = ( item ) => {
-    item.qty--;
-    if ( item.qty === 0 ) {
-        _removeItem( item )
-    }
-};
-
-const _addItem = ( item ) => {
-    const cartItem = _findCartItem( item );
-    if ( !cartItem ) {
-        _cartItems.push( Object.assign( {qty: 1}, item ) );
-    }
-    else {
-        _increaseItem( cartItem );
-    }
-};
-
-const _cartTotals = ( qty = 0, total = 0 ) => {
-    _cartItems.forEach( cartItem  => {
-        qty += cartItem.qty;
-        total += cartItem.qty * cartItem.cost;
-    } );
-    return {qty, total};
-};
+var names = [{firstName: "jonathan", lastName: "sevold"}];
 
 
 const AppStore = Object.assign(EventEmitter.prototype, {
   emitChange(){
-    this.emit( CHANGE_EVENT )
+    this.emit( 'change' )
   },
 
-  addChangeListener( callback ){
-    this.on( CHANGE_EVENT, callback )
+  addChangeListener(callback){
+    this.on( 'change', callback)
   },
 
-  removeChangeListener( callback ){
-    this.removeListener( CHANGE_EVENT, callback )
+  removeChangeListener(callback){
+    this.removeListener('change', callback )
   },
 
-  getCart(){
-    return _cartItems;
-  },
+  getNames(){
+    return names;
+  }
+});
 
-  getCatalog(){
-    return _catalog.map(item => {
-      return Object.assign( {}, item, _cartItems.find( cItem => cItem.id === item.id))
-    })
-  },
 
-  getCartTotals(){
-    return _cartTotals();
-  },
-
-  dispatcherIndex: register( function( action ){
+Dispatcher.register( function(action){
     switch(action.actionType){
-      case AppConstants.ADD_ITEM:
-        _addItem( action.item );
+      case AppConstants.ADD_NAME:
+        let name = action.name;
+        names.push(name);
         break;
 
-      case AppConstants.REMOVE_ITEM:
-        _removeItem( action.item );
-        break;
-
-      case AppConstants.INCREASE_ITEM:
-        _increaseItem( action.item );
-        break;
-
-      case AppConstants.DECREASE_ITEM:
-        _decreaseItem( action.item );
+      case AppConstants.REMOVE_NAME:
+        let name1     = action.name;
+        let firstName = name1.firstName;
+        let lastName  = name1.lastName;
+        let names     = AppStore.getNames();
+        let index     = findIndex(names,{firstName: firstName, lastName: lastName});
+        names.splice(index,1);
         break;
     }
 
     AppStore.emitChange();
 
   })
-});
 
-export default AppStore
+export default AppStore;
 
 
 
