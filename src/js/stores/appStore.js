@@ -6,10 +6,14 @@ import { findIndex } from 'lodash';
 
 
 
-var names = [{firstName: "jonathan", lastName: "sevold"}];
+var names = [];
 
+function addNameToStore(name) {
+  names.push(name);
+  console.log("we logging the names", names);
+}
 
-const AppStore = Object.assign(EventEmitter.prototype, {
+const AppStore = Object.assign({},EventEmitter.prototype, {
 
 
   emitChange(){
@@ -34,8 +38,8 @@ Dispatcher.register( function(action){
     switch(action.actionType){
       case AppConstants.ADD_NAME:
         let name = action.name;
-        console.log(names,'<---- names');
-        names.push(name);
+        addNameToStore(name);
+        console.log(AppStore.getNames());
         break;
 
       case AppConstants.REMOVE_NAME:

@@ -27,7 +27,6 @@ class Form extends React.Component {
 
   componentDidMount(){
     AppStore.addChangeListener(this.onChange);
-    getStateFromStore();
   }
 
 
